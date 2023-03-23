@@ -1,0 +1,97 @@
+Proponowanym typem strukturalnym będzie struktura Osoba z polami imie typu char* i wiek typu int. Funkcja alokująca będzie miała następującą sygnaturę:
+
+
+/* Osoba* alokuj_tablice(int rozmiar); */
+Funkcja będzie przyjmowała jako argument rozmiar tablicy i zwracała wskaźnik do dynamicznie zaalokowanej tablicy struktur Osoba. Przykładowa implementacja może wyglądać następująco:
+
+/*
+#include <iostream>
+
+struct Osoba {
+    char* imie;
+    int wiek;
+};
+
+Osoba* alokuj_tablice(int rozmiar) {
+    Osoba* tablica = new Osoba[rozmiar];
+    return tablica;
+}
+
+int main() {
+    Osoba* tablica = alokuj_tablice(5);
+    // ... dalsza część programu ...
+    delete[] tablica;
+    return 0;
+}
+*/
+W powyższym kodzie alokuj_tablice alokuje dynamicznie tablicę struktur Osoba o rozmiarze podanym jako argument funkcji. Następnie zwraca wskaźnik do pierwszego elementu tej tablicy. W funkcji main można już korzystać z zaalokowanej tablicy. Na końcu programu należy zwolnić pamięć zaalokowaną dla tablicy za pomocą operatora delete[].
+
+/* 
+void zwolnij_pamiec(Osoba* tablica);
+*/
+
+Funkcja będzie przyjmować jako argument wskaźnik do zaalokowanej wcześniej tablicy struktur Osoba i zwalniać zaalokowaną dla niej pamięć. Przykładowa implementacja może wyglądać następująco:
+
+/*
+#include <iostream>
+
+struct Osoba {
+    char* imie;
+    int wiek;
+};
+
+Osoba* alokuj_tablice(int rozmiar) {
+    Osoba* tablica = new Osoba[rozmiar];
+    return tablica;
+}
+
+void zwolnij_pamiec(Osoba* tablica) {
+    delete[] tablica;
+}
+
+int main() {
+    Osoba* tablica = alokuj_tablice(5);
+    // ... dalsza część programu ...
+    zwolnij_pamiec(tablica);
+    return 0;
+}
+*/
+W powyższym kodzie dodano funkcję zwolnij_tablice, która usuwa dynamicznie zaalokowaną pamięć dla tablicy struktur Osoba. Wartość wskaźnika tablica jest uziemiona po wykonaniu operacji zwalniania pamięci. Funkcja ta wykorzystuje operator delete[] do zwolnienia pamięci, który jest odpowiedni dla tablic zaalokowanych dynamicznie.
+
+/*
+Osoba* znajdz_wspolne_instancje(Osoba* tablica1, int rozmiar1, Osoba* tablica2, int rozmiar2, int& rozmiar_wyniku) {
+    // Tworzymy mapę, w której kluczami będą instancje Osoba,
+    // a wartościami ilość ich wystąpień w obu tablicach
+    std::unordered_map<Osoba, int> mapa;
+    
+    // Przechodzimy po pierwszej tablicy i inkrementujemy wartość w mapie
+    // dla każdej instancji, którą napotkamy
+    for (int i = 0; i < rozmiar1; i++) {
+        mapa[tablica1[i]]++;
+    }
+    
+    // Przechodzimy po drugiej tablicy i jeśli napotkamy instancję,
+    // która wystąpiła w pierwszej tablicy, to dekrementujemy wartość w mapie
+    // i dodajemy ją do wynikowej tablicy
+    std::vector<Osoba> wynik;
+    for (int i = 0; i < rozmiar2; i++) {
+        if (mapa.find(tablica2[i]) != mapa.end() && mapa[tablica2[i]] > 0) {
+            mapa[tablica2[i]]--;
+            wynik.push_back(tablica2[i]);
+        }
+    }
+    
+    // Obliczamy rozmiar wynikowej tablicy i alokujemy pamięć
+    rozmiar_wyniku = wynik.size();
+    Osoba* wynik_tablica = new Osoba[rozmiar_wyniku];
+    
+    // Przepisujemy wynik do tablicy wynikowej
+    for (int i = 0; i < rozmiar_wyniku; i++) {
+        wynik_tablica[i] = wynik[i];
+    }
+    
+    // Zwracamy adres alokacji i rozmiar tablicy wynikowej
+    return wynik_tablica;
+}
+*/
+Kod korzysta z klasy unordered_map z biblioteki standardowej C++, aby łatwo zliczyć ilość wystąpień każdej instancji w obu tablicach. Następnie przechodzimy po drugiej tablicy i dodajemy tylko te instancje, które wystąpiły wcześniej w pierwszej tablicy i mają jeszcze dostępne wystąpienia w mapie. Ostatecznie wynik kopiujemy do nowo zaalokowanej pamięci i zwracamy adres oraz rozmiar tablicy wynikowej.
