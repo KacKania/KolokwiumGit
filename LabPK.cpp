@@ -1,77 +1,144 @@
-﻿#include <iostream>
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <cstdio>
+#include <fstream>
+#include <stdio.h>
+#include <string>
+#include <cstring>
+using namespace std;
 
-/* Zmieniając ostatnią literę w poniższej instrukcji na D (dodatkowe), lub P (podstawowe)
-*  wybierasz aktywne zadanie.
-*
-*  UWAGA: jeśli rozwiązanie zadań wymaga podziału programu na pliki to dodaj je wszystkie do
-*  projektu, ale przy każdym zadaniu "includuj" tylko te, które jego dotyczą.
-*
-*/
-#define ZadanieD 
+#define ZadanieD
 
 #ifdef ZadanieD
-
-// TU UMIEŚĆ KOD ROZWIAZANIA WYBRANEGO ZADANIA DOMOWEGO 
-
-void zwolnienie_pamieci(int*** tab2D, int wiersze)
+int ileWierszy(FILE* plik)
 {
-	bool rodzaj;			//true ciagla	false fragmentaryczna
+	int ilosc = 0;
+	char tekst[100] = {};
 
-	if (**tab2D != nullptr)
+	while (fscanf(plik, "%[^\n] ", &tekst) != EOF)
 	{
-		for (int i = 0; i < wiersze; i++)
+		ilosc++;
+	}
+	return ilosc;
+}
+ostream& operator<< (ostream& ekr, FILE* plik)
+{
+	char znak;
+	if (plik != nullptr)
+	{
+		rewind(plik);
+		while (!feof(plik))
 		{
-			if (tab2D[i][0] < tab2D[i + 1][0])
-			{
-				rodzaj = true;
-			}
-			else
-			{
-				rodzaj = false;
-				break;
-			}
+			znak = fgetc(plik);
+			ekr << znak;
 		}
+	}
+	return ekr;
+}
+int main()
+{
+	setlocale(LC_ALL, "");
+	constexpr size_t ROZMIAR = 100;
+	FILE* tdostawa = nullptr;
+	FILE* todleglosc = nullptr;
+	todleglosc = fopen("taryfa_odleglosc.txt", "r");
+	tdostawa = fopen("taryfa_dostawa.txt", "r");
+	int rodleglosc = ileWierszy(todleglosc);
+	int rdostawa = ileWierszy(tdostawa);
 
-		if (rodzaj)
+	double* odleglosc_km = new double[rodleglosc];
+	double* odleglosc_cena = new double[rodleglosc];
+	double* dostawa_cena = new double[rdostawa];
+
+	rewind(todleglosc);
+	for (int i = 0; i < rodleglosc; i++)
+	{
+		fscanf(todleglosc, "%d", odleglosc_km);
+
+	}
+	
+	
+	rewind(tdostawa);
+	for (int i = 0; i < rdostawa; i++)
+	{
+		fscanf(tdostawa, "%d", dostawa_cena);
+	}
+
+	fclose(todleglosc);
+	todleglosc = nullptr;
+
+
+	double odleglosc;
+	int ster_dostawa;
+	double taryfa_odleglosc = 0;
+	double taryfa_dostawa = 0;
+	double cena = 0;
+	cout << "Podaj odleglosc " << endl;
+	cin >> odleglosc;
+	cout << " Wybierz sposob dostawy podajac [nr indeksu]: " << endl;
+	cout << tdostawa << endl;
+	cin >> ster_dostawa;
+
+	fclose(tdostawa);
+	tdostawa = nullptr;
+
+	for (int i = 0; i < rodleglosc; i++)
+	{
+		if (odleglosc <= 0)
 		{
-			delete[] tab2D[0];
-			delete[] * *tab2D;
+			cout << "za mala odleglosc";
+			break;
+		}
+		
+		if (odleglosc <= odleglosc_km[i])
+		{
+			taryfa_odleglosc = odleglosc_cena[i];
+			break;
+		}
+	}
+	for (int i = 0; i <= ster_dostawa; i++)
+	{
+		if (ster_dostawa<0)
+		{
+			cout << "Zly indeks!"; break;
 		}
 		else
 		{
-			for (int i = 0; i < wiersze; i++)
-			{
-				delete[] tab2D[i];
-			}
-			delete[] * *tab2D;
+			taryfa_dostawa = dostawa_cena[i]; 
 		}
-		tab2D = nullptr;
+			
 	}
 
-	//sprawdzanie rozmiaru
+	cena = taryfa_dostawa * taryfa_odleglosc;
 
-	/*
-	for (int rozmiar : tab2D)
-	{
-		int* tab = new int[rozmiar] {};
-		unsigned char* wsk = (unsigned char*)tab;
-	}
-	*/
- }
+
+	cout << "Cena: " << cena;
+
+
+
+
+
+}
+
+#endif
+
+#ifdef ZadanieW
+
+
+
 #endif
 
 #ifdef ZadanieP
 
-// TU UMIEŚĆ KOD ROZWIAZANIA ZADANIA PODSTAWOWEGO
+
 
 #endif
 
 #ifdef ZadanieA
 
-// TU UMIEŚĆ KOD ROZWIAZANIA ZADANIA AMBITNEGO
+
 
 #endif
-
 
 
 
