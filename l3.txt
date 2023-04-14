@@ -1,97 +1,327 @@
-Proponowanym typem strukturalnym będzie struktura Osoba z polami imie typu char* i wiek typu int. Funkcja alokująca będzie miała następującą sygnaturę:
+@@ -1,327 +0,0 @@
+﻿#include <iostream>
 
+#define ZadanieW
 
-/* Osoba* alokuj_tablice(int rozmiar); */
-Funkcja będzie przyjmowała jako argument rozmiar tablicy i zwracała wskaźnik do dynamicznie zaalokowanej tablicy struktur Osoba. Przykładowa implementacja może wyglądać następująco:
+/* Zmieniając ostatnią literę w poniższej instrukcji na D (dodatkowe), lub P (podstawowe)
+*  wybierasz aktywne zadanie.
+*
+*  UWAGA: jeśli rozwiązanie zadań wymaga podziału programu na pliki to dodaj je wszystkie do
+*  projektu, ale przy każdym zadaniu "includuj" tylko te, które jego dotyczą.
+*  Poniższe bloki dotyczą zadań z zajeć.
+*/
+ 
 
-/*
+#ifdef ZadanieD
+
 #include <iostream>
+#include <cstdlib>
+#include <cstring>
 
-struct Osoba {
-    char* imie;
-    int wiek;
-};
+using namespace std;
 
-Osoba* alokuj_tablice(int rozmiar) {
-    Osoba* tablica = new Osoba[rozmiar];
-    return tablica;
-}
+int** Tablica2dAlokacja(int wiersze, int kolumny)
+{
 
-int main() {
-    Osoba* tablica = alokuj_tablice(5);
-    // ... dalsza część programu ...
-    delete[] tablica;
-    return 0;
-}
-*/
-W powyższym kodzie alokuj_tablice alokuje dynamicznie tablicę struktur Osoba o rozmiarze podanym jako argument funkcji. Następnie zwraca wskaźnik do pierwszego elementu tej tablicy. W funkcji main można już korzystać z zaalokowanej tablicy. Na końcu programu należy zwolnić pamięć zaalokowaną dla tablicy za pomocą operatora delete[].
+    int** tablica = nullptr; // pusty wskaz nie wskaz na zaden elem
+    int size = wiersze * kolumny * sizeof(int);
+    int zaalokowaneWierszeLicznik = 0; 
+    bool True = false;
 
-/* 
-void zwolnij_pamiec(Osoba* tablica);
-*/
 
-Funkcja będzie przyjmować jako argument wskaźnik do zaalokowanej wcześniej tablicy struktur Osoba i zwalniać zaalokowaną dla niej pamięć. Przykładowa implementacja może wyglądać następująco:
+    //1MB (2^20b)
+    if (size < (1 << 20)) 
+    {
+        tablica = new (nothrow) int* [wiersze];  //używając new z(std::nothrow), możemy wyłączyć zgłaszanie problemu przez system obsługi wyjątków(12),
 
-/*
-#include <iostream>
-
-struct Osoba {
-    char* imie;
-    int wiek;
-};
-
-Osoba* alokuj_tablice(int rozmiar) {
-    Osoba* tablica = new Osoba[rozmiar];
-    return tablica;
-}
-
-void zwolnij_pamiec(Osoba* tablica) {
-    delete[] tablica;
-}
-
-int main() {
-    Osoba* tablica = alokuj_tablice(5);
-    // ... dalsza część programu ...
-    zwolnij_pamiec(tablica);
-    return 0;
-}
-*/
-W powyższym kodzie dodano funkcję zwolnij_tablice, która usuwa dynamicznie zaalokowaną pamięć dla tablicy struktur Osoba. Wartość wskaźnika tablica jest uziemiona po wykonaniu operacji zwalniania pamięci. Funkcja ta wykorzystuje operator delete[] do zwolnienia pamięci, który jest odpowiedni dla tablic zaalokowanych dynamicznie.
-
-/*
-Osoba* znajdz_wspolne_instancje(Osoba* tablica1, int rozmiar1, Osoba* tablica2, int rozmiar2, int& rozmiar_wyniku) {
-    // Tworzymy mapę, w której kluczami będą instancje Osoba,
-    // a wartościami ilość ich wystąpień w obu tablicach
-    std::unordered_map<Osoba, int> mapa;
-    
-    // Przechodzimy po pierwszej tablicy i inkrementujemy wartość w mapie
-    // dla każdej instancji, którą napotkamy
-    for (int i = 0; i < rozmiar1; i++) {
-        mapa[tablica1[i]]++;
-    }
-    
-    // Przechodzimy po drugiej tablicy i jeśli napotkamy instancję,
-    // która wystąpiła w pierwszej tablicy, to dekrementujemy wartość w mapie
-    // i dodajemy ją do wynikowej tablicy
-    std::vector<Osoba> wynik;
-    for (int i = 0; i < rozmiar2; i++) {
-        if (mapa.find(tablica2[i]) != mapa.end() && mapa[tablica2[i]] > 0) {
-            mapa[tablica2[i]]--;
-            wynik.push_back(tablica2[i]);
+        if (tablica)
+        {
+            tablica[0] = new (nothrow) int[wiersze * kolumny]; //alokacja+ przypisz do tablicy
+            //sprawdz alok, przypis wskaz 
+            if (tablica[0])
+            {
+                for (int i = 1; i < wiersze; i++)
+                {
+                    tablica[i] = tablica[0] + i * kolumny;
+                }
+                zaalokowaneWierszeLicznik = wiersze; // licznik na wiersze
+                True = true;
+            }
+            else
+            {
+                delete[] tablica;
+                tablica = nullptr;
+            }
         }
     }
-    
-    // Obliczamy rozmiar wynikowej tablicy i alokujemy pamięć
-    rozmiar_wyniku = wynik.size();
-    Osoba* wynik_tablica = new Osoba[rozmiar_wyniku];
-    
-    // Przepisujemy wynik do tablicy wynikowej
-    for (int i = 0; i < rozmiar_wyniku; i++) {
-        wynik_tablica[i] = wynik[i];
+
+    //wiekszy 1MB
+    else
+    {
+        tablica = new (nothrow) int* [wiersze];
+
+        if (tablica)
+        {
+            int i = 0;
+            for (i=0; i < wiersze; i++) {
+                tablica[i] = new (nothrow) int[kolumny];
+
+                if (!tablica[i]) 
+                {
+                    break;
+                }
+                zaalokowaneWierszeLicznik++; 
+            }
+            if (i == wiersze)
+            {
+                True = true;
+            }
+            else
+            { //czysc
+                for (int j = 0; j < i; j++) 
+                {
+                    delete[] tablica[j];
+                }
+                delete[] tablica;
+                tablica = nullptr;
+            }
+        }
     }
-    
-    // Zwracamy adres alokacji i rozmiar tablicy wynikowej
-    return wynik_tablica;
+
+
+    if (True)
+    {
+        cerr << "pomyslna alokacja " << wiersze << "x" << kolumny << " 2wymiarowej tablicy (" << size << " bajtow) uzyto ";
+        
+        if (size < (1 << 20))
+        {
+            cerr << "kontynuacja" << endl;
+        }
+        else 
+        {
+            cerr << "fragmentacja" << endl;
+        }
+    }
+
+    else 
+    {
+        cerr << "niepomyslna alokacja " << wiersze << "x" << kolumny << " 2wymiarowej tablicy (" << size << " bajtow)." << endl;
+        if (tablica)
+        {
+            // zwalnianie tylko zaalokowanych wierszy
+            for (int i = 0; i < zaalokowaneWierszeLicznik; i++)
+            {
+                delete[] tablica[i];
+            }
+            delete[] tablica[0];
+            delete[] tablica;
+            tablica = nullptr;
+        }
+    }
+
+    return tablica;
 }
+
+
+
+int main()
+{
+    int wiersze = 5500;
+    int kolumny = 5500;
+    int** tablica = Tablica2dAlokacja(wiersze, kolumny);
+
+    if (tablica) 
+    {                   // inicjalizacja 
+        
+        for (int i = 0; i < wiersze; i++) {
+            memset(tablica[i], 0, kolumny * sizeof(int)); // wartosc pamieci wskaz, wart,bajty
+        }
+
+        
+        tablica[0][1] = 1;
+        tablica[wiersze - 1][kolumny - 1] = 2;
+
+                                                // zwolnienie pam
+        for (int i = 0; i < wiersze; i++) {
+            delete[] tablica[i];
+        }
+        delete[] tablica;
+        tablica = nullptr;
+    }
+
+    return 0;
+}
+
+#endif
+
+#ifdef ZadanieW
+
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
+
+using namespace std;
+
+int* tablica1dAlokacja(int rozmiar)
+{
+    if (rozmiar < 0)
+    {
+        return nullptr;
+    }
+    else
+    {
+        int* tablica = new int[rozmiar + 1]();
+        tablica[0] = rozmiar;
+        return (tablica + 1);
+    }
+}
+
+
+
+void zwolnianieTab(int* tablica)
+{
+    if (tablica != nullptr)
+    {
+        delete[](tablica - 1);
+    }
+}
+
+
+
+
+int* zmienRozmiar(int* tablica, int nowyRozmiar)
+{
+    if (tablica == nullptr)
+    {
+        return tablica1dAlokacja(nowyRozmiar);
+    }
+    if (nowyRozmiar < 0)
+    {
+        zwolnianieTab(tablica);
+        return nullptr;
+    }
+    else
+    {
+        int staryRozmiar = tablica[-1];
+
+
+        if (staryRozmiar == nowyRozmiar)
+        {
+            return tablica;
+        } // () wskaznik lub 0
+
+        int* temp = new int[nowyRozmiar + 1]();
+        temp[0] = nowyRozmiar;
+        int kopiaRozmiar = staryRozmiar < nowyRozmiar ? staryRozmiar : nowyRozmiar; //na ? i :  
+
+
+        memcpy(temp + 1, tablica, kopiaRozmiar * sizeof(int));
+        zwolnianieTab(tablica);
+        return (temp + 1);
+    }
+}
+
+void wypiszTabs(int* tablica)
+{
+    if (tablica == nullptr)
+    {
+        cout << "null" << endl;
+        return;
+    }
+    int rozmiar = tablica[-1];
+    for (int i = 0; i < rozmiar; i++)
+    {
+        cout << tablica[i] << " ";
+    }
+    cout << endl;
+}
+
+
+
+
+int main()
+{
+    int rozmiar;
+    cout << "Wpisz rozmiar tablicy: ";
+    cin >> rozmiar;
+
+    int* tablica = tablica1dAlokacja(rozmiar);
+    for (int i = 0; i < rozmiar; i++)
+    {
+        tablica[i] = i;
+    }
+    wypiszTabs(tablica);
+
+    int nowyRozmiar;
+    cout << "Wpisz nowyRozmiar: ";
+    cin >> nowyRozmiar;
+    tablica = zmienRozmiar(tablica, nowyRozmiar);
+    wypiszTabs(tablica);
+
+    zwolnianieTab(tablica);
+
+
+    return 0;
+}
+
+
+
+
+#endif
+
+#ifdef ZadanieP
+
+#include <iostream>
+#include <cstdlib>
+#include <cstring>
+
+using namespace std;
+
+
+
+in main()
+{
+
+
+
+    return 0;
+}
+#endif
+
+#ifdef ZadanieA
+
+// TU UMIEŚĆ KOD ROZWIAZANIA ZADANIA AMBITNEGO
+
+#endif
+
+/* 
+	Poniższe bloki warunkowe dotyczą zadań kolokwialnych.
+	Oddając zadania z zajęć, skasuj poniższe bloki.
+	Oddając zadania z kolokwium skasuj powyższe bloki.
 */
-Kod korzysta z klasy unordered_map z biblioteki standardowej C++, aby łatwo zliczyć ilość wystąpień każdej instancji w obu tablicach. Następnie przechodzimy po drugiej tablicy i dodajemy tylko te instancje, które wystąpiły wcześniej w pierwszej tablicy i mają jeszcze dostępne wystąpienia w mapie. Ostatecznie wynik kopiujemy do nowo zaalokowanej pamięci i zwracamy adres oraz rozmiar tablicy wynikowej.
+
+
+#ifdef Blok1
+
+// TU UMIEŚĆ KOD ROZWIAZANIA ZADANIA Z BLOKU 1
+
+#endif
+
+#ifdef Blok2
+
+// TU UMIEŚĆ KOD ROZWIAZANIA ZADANIA Z BLOKU 2
+
+#endif
+
+#ifdef Blok3
+
+// TU UMIEŚĆ KOD ROZWIAZANIA ZADANIA Z BLOKU 3
+
+#endif
+
+#ifdef Blok4
+
+// TU UMIEŚĆ KOD ROZWIAZANIA ZADANIA Z BLOKU 4
+
+#endif
+
