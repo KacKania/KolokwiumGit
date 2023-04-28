@@ -1,0 +1,140 @@
+#include <iostream>
+
+class Fraction {
+
+private:
+
+    int m_licznik;
+
+    unsigned int m_mianownik;
+
+public:
+
+    // konstruktor
+
+    Fraction(int licznik = 0, unsigned int mianownik = 1) : m_licznik(licznik), m_mianownik(mianownik) {
+
+        // zapewnienie, że mianownik jest zawsze dodatni
+
+        if (mianownik == 0) {
+
+            m_mianownik = 1;
+
+        }
+
+        // jeśli licznik jest ujemny, zmiana znaku i ustawienie mianownika na wartość bezwzględną
+
+        if (m_licznik < 0) {
+
+            m_licznik = -m_licznik;
+
+            m_mianownik = mianownik;
+
+        }
+
+    }
+
+    // seter i geter licznika
+
+    void setLicznik(int licznik) {
+
+        m_licznik = licznik;
+
+    }
+
+    int getLicznik() const {
+
+        return m_licznik;
+
+    }
+
+    // seter i geter mianownika
+
+    void setMianownik(unsigned int mianownik) {
+
+        // mianownik musi być większy od zera
+
+        if (mianownik > 0) {
+
+            m_mianownik = mianownik;
+
+        }
+
+        else {
+
+            m_mianownik = 1;
+
+        }
+
+    }
+
+    unsigned int getMianownik() const {
+
+        return m_mianownik;
+
+    }
+
+    // zwraca wartość ułamka jako liczbę zmiennoprzecinkową
+
+    double getValue() const {
+
+        return static_cast<double>(m_licznik) / static_cast<double>(m_mianownik);
+
+    }
+
+    // funkcja zwraca ułamek w postaci stringa
+
+    std::string toString() const {
+
+        return std::to_string(m_licznik) + "/" + std::to_string(m_mianownik);
+
+    }
+
+    // operator konwersji na typ double
+
+    operator double() const {
+
+        return getValue();
+
+    }
+
+    // operatory dodawania i odejmowania
+
+    Fraction operator+(const Fraction& other) const {
+
+        int licznik = m_licznik * other.m_mianownik + other.m_licznik * m_mianownik;
+
+        unsigned int mianownik = m_mianownik * other.m_mianownik;
+
+        return Fraction(licznik, mianownik);
+
+    }
+
+    Fraction operator-(const Fraction& other) const {
+
+        int licznik = m_licznik * other.m_mianownik - other.m_licznik * m_mianownik;
+
+        unsigned int mianownik = m_mianownik * other.m_mianownik;
+
+        return Fraction(licznik, mianownik);
+
+    }
+
+    // operatory porównywania
+
+    bool operator==(const Fraction& other) const {
+
+        return m_licznik * other.m_mianownik == other.m_licznik * m_mianownik;
+
+    }
+
+    bool operator!=(const Fraction& other) const {
+
+        return !(*this == other);
+
+    }
+
+    bool operator<(const Fraction& other) const {
+
+        return m_liczn
+
