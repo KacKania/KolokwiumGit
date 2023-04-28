@@ -210,5 +210,18 @@ void Ulamek::wypisz() const {
     std::cout << calkowita << " | " << reszta << " / " << m_mianownik << std::endl;
 
 }
+Ulamek Ulamek::pomnoz(const Ulamek &u) const {
+
+    Ulamek wynik;
+
+    wynik.ustawLicznik(this->m_licznik * u.m_licznik);
+
+    wynik.ustawMianownik(this->m_mianownik * u.m_mianownik);
+
+    return wynik;
+
+}
+
+
 
 
