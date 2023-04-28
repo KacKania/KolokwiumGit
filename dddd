@@ -107,4 +107,108 @@ void Ulamek::setUlamek(int licznik, int mianownik) {
     setMianownik(mianownik);
 
 }
+class Ulamek {
+
+public:
+
+    Ulamek() : m_licznik(0), m_mianownik(1) {}
+
+    Ulamek(int licznik, int mianownik);
+
+    int getLicznik() const { return m_licznik; }
+
+    int getMianownik() const { return m_mianownik; }
+
+    double toDouble() const { return static_cast<double>(m_licznik) / m_mianownik; }
+
+    void setLicznik(int licznik);
+
+    void setMianownik(int mianownik);
+
+    void setUlamek(int licznik, int mianownik);
+
+    void wypisz() const;
+
+private:
+
+    int m_licznik;
+
+    int m_mianownik;
+
+};
+
+Ulamek::Ulamek(int licznik, int mianownik) {
+
+    setUlamek(licznik, mianownik);
+
+}
+
+void Ulamek::setLicznik(int licznik) {
+
+    if (licznik == 0) {
+
+        m_licznik = 0;
+
+        m_mianownik = 1;
+
+    } else if (m_mianownik < 0) {
+
+        m_licznik = -licznik;
+
+        m_mianownik = -m_mianownik;
+
+    } else {
+
+        m_licznik = licznik;
+
+    }
+
+}
+
+void Ulamek::setMianownik(int mianownik) {
+
+    if (mianownik == 0) {
+
+        // do nothing
+
+    } else if (mianownik < 0) {
+
+        m_licznik = -m_licznik;
+
+        m_mianownik = -mianownik;
+
+    } else {
+
+        m_mianownik = mianownik;
+
+    }
+
+}
+
+void Ulamek::setUlamek(int licznik, int mianownik) {
+
+    setLicznik(licznik);
+
+    setMianownik(mianownik);
+
+}
+
+void Ulamek::wypisz() const {
+
+    int calkowita = m_licznik / m_mianownik;
+
+    int reszta = m_licznik % m_mianownik;
+
+    if (reszta < 0) {
+
+        reszta += m_mianownik;
+
+        calkowita -= 1;
+
+    }
+
+    std::cout << calkowita << " | " << reszta << " / " << m_mianownik << std::endl;
+
+}
+
 
