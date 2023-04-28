@@ -1,0 +1,15 @@
+Zdefiniuj klasę do opisu ułamka zwykłego. Przyjmij, że ułamek zwykły opisuje
+para liczb l i m, gdzie l (licznik) to liczba całkowita, a m (mianownik to liczba
+naturalna). Znak ułamka musi być przechowywany w liczniku.
+W tym celu, umieść w klasie, w sekcji prywatnej, dwa pola typu int o nazwach
+m_licznik i m_mianownik. Następnie zdefiniuj setery i getery dla obu tych pól,
+pamiętając o założeniach. W szczególności seter mianownika nie powinien pozwalać
+na zadanie wartości innej niż naturalna. Dlatego:
+- zadnie zera powinno zerować licznik i ustawiać mianownik na 1,
+- zadanie liczby ujemnej powinno zmieniać aktualny znak licznika na przeciwny,
+a w mianownik wpisany powinien zostać moduł podanej wartości.
+Wobec pozostałych seterów/geterów nie ma szczególnych wymagań – zaimplementuj ich
+najbardziej podstawowe wersje.
+
+ Dodaj do klasy jedną metodę użytkową pozwalającą na wyznaczenie wartości dziesiętnej ułamka. Metoda taka zwraca liczbę typu double, będącą wynikiem dzielenia
+rzeczywistego licznika przez mianownik.
