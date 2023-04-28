@@ -1,0 +1,23 @@
+Dodaj do klasy do opisu ułamka zwykłego seter zbiorczy pozwalający na zadanie
+licznika i mianownika jednocześnie. Stosuj się do zasady DRY.
+Wskazówki: nie powielaj kodu sterów jednostkowych tylko, użyj ich w seterze.
+
+
+ Dodaj metodę pozwalającą na ustawianie ułamka na wartość zadanego ułamka dziesiętnego (dowolna liczba rzeczywista). Metoda dokonująca zamiany powinna jako dodatkowy argument przyjąć dokładność jako liczbę miejsc po przecinku (domyślnie 2)
+np.:
+Liczba 0.12345 konwertowana z dokładnością 3 to 123/1000.
+Wskazówki: Zmiana liczby rzeczywistej na ułamek zwykły nie zawsze jest możliwa
+i trzeba się liczyć z pewnym przybliżeniem. Wartość domyślną dla konwersji można
+ustawić na liście argumentów metody.
+
+
+Dodaj metodę pozwalającą na wypisanie na ekranie (dopuszczalny cout w tej metodzie), ułamka w postaci właściwej:
+cześć_całkowita | reszta_z_dzielnia / mianownik.
+Wskazówki: Upraszczając ułamek do postaci właściwej posługujemy się dzieleniem
+całkowitym i operacją modulo.
+
+
+ Dodaj metodę pozwalającą na mnożenie dwóch ułamków przez siebie. Wynikiem powinien być nowy, trzeci ułamek.
+Wskazówki: Metoda powinna zwracać nowy ułamek i mnożyć ułamek, dla którego została
+wywołana, przez ułamek zadany z zewnątrz. Żaden z mnożonych ułamków nie powinien
+ulegać modyfikacji.
