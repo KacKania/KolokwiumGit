@@ -1,6 +1,8 @@
 ﻿#include <iostream>
-#include <ctime>
-#include <cstdlib>
+#include <cstring>
+#include <cstdio>
+#include <ctype.h>
+#include <cmath>
 
 using namespace std;
 /* Zmieniając ostatnią literę w poniższej instrukcji na D (dodatkowe), lub P (podstawowe)
@@ -16,109 +18,162 @@ using namespace std;
 
 // TU UMIEŚĆ KOD ROZWIAZANIA WYBRANEGO ZADANIA DOMOWEGO 
 
-#define RND_ZZ (double)rand() / RAND_MAX
-#define RND_ZO (double)rand() / (RAND_MAX + 1)
-#define RND_OZ (rand() + 1.0) / (RAND_MAX + 1)
-#define RND_OO (rand() + 1.0) / (RAND_MAX + 2)
-
-class Generator
+class Point
 {
-	double m_a;
-	double m_b;
-	bool m_czyLewaGranicaOtwarta;
-	bool m_czyPrawaGranicaOtwarta;
-	double m_losowania[4];
-	int m_index = 0;
-	int m_ziarno;
-	double losuj();
-	bool sprawdzPowtorzenie(double x);
+	int m_x, m_y;
+	char m_symbol;
+	static int s_szerokosc;
+	static int s_wysokosc;
+	static int licznik;
+	int m_nrInstancji = licznik;
+	static Point instancje[];
+	static void sprawdz(Point p);
 public:
-
-	void setAll(double a, double b, bool lewaGranica, bool prawaGranica, int ziarno)
+	Point();
+	Point(int x, int y, char symbol);
+	~Point();
+	void setX(int x);
+	void setY(int y);
+	void setSymbol(char sym)
 	{
-		setA(a);
-		setB(b);
-		setLewaGranica(lewaGranica);
-		setPrawaGranica(prawaGranica);
-		setZiarno(ziarno);
+		if (isalpha(sym))
+			m_symbol = sym;
+		else m_symbol = 0;
 	}
-	void setA(double a) { m_a = a; }
-	void setB(double b) { m_b = b; }
-	void setLewaGranica(bool granica) { m_czyLewaGranicaOtwarta = granica; }
-	void setPrawaGranica(bool granica) { m_czyPrawaGranicaOtwarta = granica; }
-	void setZiarno(int ziarno){ m_ziarno = ziarno; }
-
-	double generujLosowa();
+	static void setRozmiarEkranu(int x, int y);
+	int getX() { return m_x; }
+	int getY() { return m_y; }
+	char getSymbol() { return m_symbol; }
 };
 
-double Generator::losuj()
+Point Point::instancje[1000];
+int Point::s_szerokosc = 1920;
+int Point::s_wysokosc = 1080;
+int Point::licznik = 0;
+
+Point::Point()
 {
-	double wylosowana;
-
-	if (!m_czyLewaGranicaOtwarta && !m_czyPrawaGranicaOtwarta)
-	{
-		wylosowana = m_a + RND_ZZ * (m_b - m_a);
-	}
-	else if (!m_czyLewaGranicaOtwarta && m_czyPrawaGranicaOtwarta)
-	{
-		wylosowana = m_a + RND_ZO * (m_b - m_a);
-	}
-	else if (m_czyLewaGranicaOtwarta && !m_czyPrawaGranicaOtwarta)
-	{
-		wylosowana = m_a + RND_OZ * (m_b - m_a);
-	}
-	else if (m_czyLewaGranicaOtwarta && m_czyPrawaGranicaOtwarta)
-	{
-		wylosowana = m_a + RND_OO * (m_b - m_a);
-	}
-
-	return wylosowana;
+	setX(s_szerokosc / 2);
+	setY(s_wysokosc / 2);
+	setSymbol(NULL);
+	instancje[licznik] = *this;
+	licznik++;
 }
 
-bool Generator::sprawdzPowtorzenie(double x)
+Point::Point(int x, int y, char symbol)
 {
-	bool sprawdz;
-	for (int i = 0; i < 4; i++)
-	{
-		if (x != m_losowania[i])
-			sprawdz = true;
-		else
-			sprawdz = false;
-	}
-
-	return sprawdz;
+	setX(x);
+	setY(y);
+	setSymbol(symbol);
+	instancje[licznik] = *this;
+	licznik++;
 }
 
-double Generator::generujLosowa()
+Point::~Point()
 {
-	double los = losuj();
-
-	if (sprawdzPowtorzenie(los))
+	for (int i = m_nrInstancji; i < licznik; i++)
 	{
-		m_losowania[m_index] = los;
-		m_index++;
-		if (m_index > 3)
-			m_index = 0;
-		return los;
+		instancje[i] = instancje[i + 1];
+	}
+	licznik--;
+}
+
+void Point::setX(int x)
+{
+	if (x < 0)
+	{
+		m_x = 0;
+	}
+	else if (x > s_szerokosc)
+	{
+		m_x = s_szerokosc;
 	}
 	else
-		generujLosowa();
+	{
+		m_x = x;
+	}
+}
 
+void Point::setY(int y)
+{
+	if (y < 0)
+	{
+		m_y = 0;
+	}
+	else if (y > s_wysokosc)
+	{
+		m_y = s_wysokosc;
+	}
+	else
+	{
+		m_y = y;
+	}
+}
+
+void Point::setRozmiarEkranu(int x, int y)
+{
+	if (x < 0)
+	{
+		s_szerokosc = 0;
+	}
+	if (y < 0)
+	{
+		s_wysokosc = 0;
+	}
+
+	if (x % 2 == 0 && y % 2 == 0)
+	{
+		s_szerokosc = x;
+		s_wysokosc = y;
+	}
+	else if (x % 2 != 0)
+	{
+		s_szerokosc = x - 1;
+	}
+	else if (y% 2 != 0)
+	{
+		s_wysokosc = y - 1;
+	}
+
+	for (int i = 0; i < licznik; i++)
+	{
+		sprawdz(instancje[i]);
+	}
+}
+
+void Point::sprawdz(Point p)
+{
+	if (p.getX() > s_szerokosc)
+		p.setX(s_szerokosc);
+	else if (p.getY() > s_wysokosc)
+		p.setY(s_wysokosc);
+}
+
+ostream& operator<<(ostream& str, Point p)
+{
+	str << p.getSymbol() << "X :" << p.getX() << " Y: " << p.getY() <<endl;
+	return str;
 }
 
 int main()
 {
-	srand(time(0));
+	
+	Point p1(354, 123, 'a');
+	Point p2(123, 345, 'b');
+	Point p3(675, 245, 'c');
+	Point p4(451, 178, 'd');
+	Point p5(1567, 1003, 'e');
 
-	Generator g;
-	g.setAll(2.5, 2.6, 1, 1, time(0));
 
-	cout << g.generujLosowa() << endl;
-	cout << g.generujLosowa() << endl;
-	cout << g.generujLosowa() << endl;
-	cout << g.generujLosowa() << endl;
-	cout << g.generujLosowa() << endl;
-	cout << g.generujLosowa() << endl;
+	cout << "Przed zmiana rozmiar 1920 x 1080" << endl;
+	cout << p1 << p2 << p3 << p4 << p5;
+
+	Point::setRozmiarEkranu(1200, 800);
+
+	cout << "po zmianie rozmiaru na 1200 x 800" << endl;
+	cout << p1 << p2 << p3 << p4 << p5;
+
+
 }
 
 #endif

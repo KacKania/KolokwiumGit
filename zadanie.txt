@@ -1,0 +1,175 @@
+v1
+class GraPlanszowa
+{
+protected:
+	char m_tytul[400];
+	int m_liczbaGraczy;
+	int m_czasTrwania;
+	TypGry m_typ;
+	double m_ocenaGraczy;
+	int m_liczbaOcen;
+	double ograniczenie(double wart, double dolne, double gorne)
+	{
+		if (wart > gorne) return gorne;
+		else if (wart < dolne) return dolne;
+		else return wart;
+	}
+public:
+	GraPlanszowa(const char* tytul, int liczbaGraczy, int czasTrwania, TypGry typ)
+	{
+		setTytul(tytul);
+		setLiczbaGraczy(liczbaGraczy);
+		setCzasTrwania(czasTrwania);
+		setTypGry(typ);
+		m_ocenaGraczy = 0;
+		m_liczbaOcen = 0;
+	}
+	void setTytul(const char* tyt) { strncpy(m_tytul, tyt, 400); }
+	void setLiczbaGraczy(int lg) { m_liczbaGraczy = (int)ograniczenie(lg, 1, 10); }
+	void setCzasTrwania(int czas) { m_czasTrwania = (int)ograniczenie(czas, 10, 720); }
+	void setTypGry(TypGry typ) { m_typ = typ; }
+	void ocen(double nowaOcena)
+	{
+		nowaOcena = ograniczenie(nowaOcena, 0.0, 5.0);
+		m_ocenaGraczy *= m_liczbaOcen;
+		m_ocenaGraczy += nowaOcena;
+		m_ocenaGraczy /= ++nowaOcena;
+	}
+};
+
+#####################################################################################
+
+v2
+class GraPlanszowa
+{
+protected:
+    char m_tytul[400];
+    int m_liczbaGraczy;
+    int m_czasTrwania;
+    TypGry m_typ;
+    double m_ocenaGraczy;
+    int m_liczbaOcen;
+
+    double ograniczenie(double wart, double dolne, double gorne)
+    {
+        if (wart > gorne) return gorne;
+        else if (wart < dolne) return dolne;
+        else return wart;
+    }
+
+public:
+    // Konstruktor argumentowy, sposób 1
+    GraPlanszowa(const char* tyt, int lg, int czas, TypGry typ) :
+        m_liczbaOcen(0), m_ocenaGraczy(0.0)
+    {
+        setTytul(tyt);
+        setLiczbaGraczy(lg);
+        setCzasTrwania(czas);
+        setTypGry(typ);
+    }
+
+    // Konstruktor argumentowy, sposób 2
+    GraPlanszowa(const char* tyt, int lg, int czas, TypGry typ) :
+        m_liczbaOcen(0), m_ocenaGraczy(0.0),
+        m_tytul{}, m_liczbaGraczy{}, m_czasTrwania{}, m_typ{}
+    {
+        setTytul(tyt);
+        setLiczbaGraczy(lg);
+        setCzasTrwania(czas);
+        setTypGry(typ);
+    }
+
+    void setTytul(const char* tyt) { strncpy(m_tytul, tyt, 400); }
+    void setLiczbaGraczy(int lg) { m_liczbaGraczy = (int)ograniczenie(lg, 1, 10); }
+    void setCzasTrwania(int czas) { m_czasTrwania = (int)ograniczenie(czas, 10, 720); }
+    void setTypGry(TypGry typ) { m_typ = typ; }
+    void ocen(double nowaOcena)
+    {
+        nowaOcena = ograniczenie(nowaOcena, 0.0, 5.0);
+        m_ocenaGraczy *= m_liczbaOcen;
+        m_ocenaGraczy += nowaOcena;
+        m_ocenaGraczy /= ++nowaOcena;
+    }
+};
+
+class GraPlanszowa
+{
+protected:
+    char m_tytul[400];
+    int m_liczbaGraczy;
+    int m_czasTrwania;
+    TypGry m_typ;
+    double m_ocenaGraczy;
+    int m_liczbaOcen;
+
+    double ograniczenie(double wart, double dolne, double gorne)
+    {
+        if (wart > gorne) return gorne;
+        else if (wart < dolne) return dolne;
+        else return wart;
+    }
+
+public:
+    GraPlanszowa(const char* tytul = "Nowa Gra", int liczbaGraczy = 2, int czasTrwania = 60, TypGry typ = TypGry::Przygodowa)
+        : m_liczbaOcen(0), m_ocenaGraczy(0.0)
+    {
+        setTytul(tytul);
+        setLiczbaGraczy(liczbaGraczy);
+        setCzasTrwania(czasTrwania);
+        setTypGry(typ);
+    }
+
+    // metody set i ocen takie same jak w poprzednim przykładzie
+};
+class GraPlanszowa
+{
+private:
+    static int statystyki[6]; // tablica do przechowywania statystyk
+    // pozostałe pola klasy
+
+public:
+    GraPlanszowa(const char* tytul = "Nowa Gra", int liczbaGraczy = 2, int czasTrwania = 60, TypGry typ = TypGry::Przygodowa)
+        : m_liczbaOcen(0), m_ocenaGraczy(0.0)
+    {
+        setTytul(tytul);
+        setLiczbaGraczy(liczbaGraczy);
+        setCzasTrwania(czasTrwania);
+        setTypGry(typ);
+        // zwiększamy statystyki dla nowej gry
+        statystyki[0]++;
+    }
+
+    void ocen(double nowaOcena)
+    {
+        nowaOcena = ograniczenie(nowaOcena, 0.0, 5.0);
+        m_ocenaGraczy *= m_liczbaOcen;
+        m_ocenaGraczy += nowaOcena;
+        m_ocenaGraczy /= ++nowaOcena;
+        m_liczbaOcen++;
+
+        // aktualizujemy statystyki
+        if (nowaOcena == 0) {
+            statystyki[1]++;
+        }
+        else if (nowaOcena <= 1.0) {
+            statystyki[2]++;
+        }
+        else if (nowaOcena <= 2.0) {
+            statystyki[3]++;
+        }
+        else if (nowaOcena <= 3.0) {
+            statystyki[4]++;
+        }
+        else {
+            statystyki[5]++;
+        }
+    }
+
+    static void wypiszStatystyki()
+    {
+        int nieocenione = statystyki[0] - statystyki[1] - statystyki[2] - statystyki[3] - statystyki[4] - statystyki[5];
+        cout << "Statystyki gier planszowych:" << endl;
+        cout << "- Liczba gier ocenionych w przedziale <0.0, 1.0>: " << statystyki[2] << endl;
+        cout << "- Liczba gier ocenionych w przedziale (1.0, 2.0]: " << statystyki[3] << endl;
+        cout << "- Liczba gier ocenionych w przedziale (2.0, 3.0]: " << statystyki[4] << endl;
+        cout << "- Liczba gier ocenionych w przedziale (3.0, 5.0]: " << statysty
