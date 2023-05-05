@@ -1,0 +1,3 @@
+do 7 dni
+do 4 dni
+do 2 dni
