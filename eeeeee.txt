@@ -1,0 +1,53 @@
+enum class TypGry 
+{
+	strategiczna,
+	ekonomiczna,
+	przygodowa,
+};
+
+class GraPlanszowa
+{
+protected:
+	char m_tytul[400];
+	int m_liczbaGraczy;
+	int m_czasTrwania;
+	TypGry m_typ;
+	double m_ocenaGraczy;
+	int m_liczbaOcen;
+	double ograniczenie(double wart, double dolne, double gorne)
+	{
+		if (wart > gorne) return gorne;
+		else if (wart < dolne) return dolne;
+		else return wart;
+	}
+public:
+	void setTytul(const char* tyt) { strncpy(m_tytul, tyt, 400); }
+	void setLiczbaGraczy(int lg) { m_liczbaGraczy = (int)ograniczenie(lg, 1, 10); }
+	void setCzasTrwania(int czas) { m_czasTrwania = (int)ograniczenie(czas, 10, 720); }
+	void setTypGry(TypGry typ) { m_typ = typ; }
+	void ocen(double nowaOcena)
+	{
+		nowaOcena = ograniczenie(nowaOcena, 0.0, 5.0);
+		m_ocenaGraczy *= m_liczbaOcen;
+		m_ocenaGraczy += nowaOcena;
+		m_ocenaGraczy /= ++nowaOcena;
+	}
+	
+};
+
+Dla klasy GraPlanszowa, zdefiniowanej w pliku „klasy.h” zdefiniuj konstruktor
+argumentowy, pozwalający na ustawienie wszystkich pól oprócz:
+- liczby ocen (zawsze ustawiane na 0 w nowej instancji),
+- oceny graczy (zawsze ustawione na 0 w nowej instancji),
+na zadane wartości (przesłane w jego argumentach). Pola wymienione wyżej ustaw
+jako wartości domyślne, pola wymagające sprawdzenia ograniczeń ustaw seterami, a
+pozostałe zadaj na liście inicjalizacyjnej.
+
+
+ Następnie dodaj do klasy konstruktor domyślny, który ustawi pola następująco:
+tytuł - „Nowa Gra”, liczba graczy – 2, czas trwania - 60 (minut), typ gry - przygodowa.
+W
+
+
+ Następnie dodaj do klasy licznik instancji (pole statyczne) do śledzenia, ile
+jest wszystkich gier planszowych w programie. Licznik powinien być zainicjalizowany wartością 0 i być inkrementowany w każdym zdefiniowanym konstruktorze. Zdefiniuj destruktor, w którym licznik instancji będzie dekrementowany. Napisz publiczny geter statyczny do odczytu liczby instancji.
