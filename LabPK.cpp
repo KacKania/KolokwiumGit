@@ -1,10 +1,7 @@
 ﻿#include <iostream>
-#include <cstring>
-#include <cstdio>
-#include <ctype.h>
-#include <cmath>
 
 using namespace std;
+
 /* Zmieniając ostatnią literę w poniższej instrukcji na D (dodatkowe), lub P (podstawowe)
 *  wybierasz aktywne zadanie.
 *
@@ -18,164 +15,106 @@ using namespace std;
 
 // TU UMIEŚĆ KOD ROZWIAZANIA WYBRANEGO ZADANIA DOMOWEGO 
 
-class Point
+class Osoba
 {
-	int m_x, m_y;
-	char m_symbol;
-	static int s_szerokosc;
-	static int s_wysokosc;
-	static int licznik;
-	int m_nrInstancji = licznik;
-	static Point instancje[];
-	static void sprawdz(Point p);
-public:
-	Point();
-	Point(int x, int y, char symbol);
-	~Point();
-	void setX(int x);
-	void setY(int y);
-	void setSymbol(char sym)
-	{
-		if (isalpha(sym))
-			m_symbol = sym;
-		else m_symbol = 0;
-	}
-	static void setRozmiarEkranu(int x, int y);
-	int getX() { return m_x; }
-	int getY() { return m_y; }
-	char getSymbol() { return m_symbol; }
+
 };
 
-Point Point::instancje[1000];
-int Point::s_szerokosc = 1920;
-int Point::s_wysokosc = 1080;
-int Point::licznik = 0;
-
-Point::Point()
+class ZamekCyfrowy
 {
-	setX(s_szerokosc / 2);
-	setY(s_wysokosc / 2);
-	setSymbol(NULL);
-	instancje[licznik] = *this;
-	licznik++;
-}
+	double m_klucz;
+public:
+	ZamekCyfrowy(double klucz) { m_klucz = klucz; }
+	bool Porownaj(double klucz);
+	
+};
 
-Point::Point(int x, int y, char symbol)
+bool ZamekCyfrowy::Porownaj(double klucz)
 {
-	setX(x);
-	setY(y);
-	setSymbol(symbol);
-	instancje[licznik] = *this;
-	licznik++;
-}
-
-Point::~Point()
-{
-	for (int i = m_nrInstancji; i < licznik; i++)
-	{
-		instancje[i] = instancje[i + 1];
-	}
-	licznik--;
-}
-
-void Point::setX(int x)
-{
-	if (x < 0)
-	{
-		m_x = 0;
-	}
-	else if (x > s_szerokosc)
-	{
-		m_x = s_szerokosc;
-	}
+	if (m_klucz == klucz)
+		return 1;
 	else
-	{
-		m_x = x;
-	}
+		return 0;
 }
 
-void Point::setY(int y)
+class Sejf
 {
-	if (y < 0)
+	int m_dane[5] = {};
+	ZamekCyfrowy m_zamek;
+	Osoba* m_osoby[3] = {};
+public:
+	Sejf(double klucz)
+		:m_zamek(klucz)
+	{}
+	void ZapiszDane(Osoba* o, double klucz, int* dane, const int rozmiar);
+	int* OdczytajDane(Osoba* o, double klucz);
+	void dodajOsobe(Osoba *o, int index);
+
+};
+
+void Sejf::ZapiszDane(Osoba* o, double klucz, int *dane, const int rozmiar)
+{
+	bool zgodnoscOsoba = 0;
+
+	for (int i = 0; i < 3; i++)
 	{
-		m_y = 0;
+		if (m_osoby[i] == o)
+			zgodnoscOsoba = 1;
 	}
-	else if (y > s_wysokosc)
-	{
-		m_y = s_wysokosc;
-	}
+	bool zgodnoscKlucz = m_zamek.Porownaj(klucz);
+
+	if (zgodnoscKlucz && zgodnoscOsoba)
+		memcpy(m_dane, dane, sizeof(m_dane));
 	else
-	{
-		m_y = y;
-	}
+		cout << "Bledny klucz lub nieupowazniona osoba!" << endl;
 }
 
-void Point::setRozmiarEkranu(int x, int y)
+int* Sejf::OdczytajDane(Osoba* o, double klucz)
 {
-	if (x < 0)
-	{
-		s_szerokosc = 0;
-	}
-	if (y < 0)
-	{
-		s_wysokosc = 0;
-	}
+	bool zgodnoscOsoba = 0;
 
-	if (x % 2 == 0 && y % 2 == 0)
+	for (int i = 0; i < 3; i++)
 	{
-		s_szerokosc = x;
-		s_wysokosc = y;
+		if (m_osoby[i] == o)
+			zgodnoscOsoba = 1;
 	}
-	else if (x % 2 != 0)
-	{
-		s_szerokosc = x - 1;
-	}
-	else if (y% 2 != 0)
-	{
-		s_wysokosc = y - 1;
-	}
+	bool zgodnoscKlucz = m_zamek.Porownaj(klucz);
 
-	for (int i = 0; i < licznik; i++)
-	{
-		sprawdz(instancje[i]);
-	}
+	if (zgodnoscKlucz && zgodnoscOsoba)
+		return m_dane;
+	else
+		cout << "Bledny klucz lub nieupowazniona osoba!" << endl;
 }
 
-void Point::sprawdz(Point p)
+void Sejf::dodajOsobe(Osoba *o, int index)
 {
-	if (p.getX() > s_szerokosc)
-		p.setX(s_szerokosc);
-	else if (p.getY() > s_wysokosc)
-		p.setY(s_wysokosc);
+	m_osoby[index]=o;
 }
 
-ostream& operator<<(ostream& str, Point p)
-{
-	str << p.getSymbol() << "X :" << p.getX() << " Y: " << p.getY() <<endl;
-	return str;
-}
 
 int main()
 {
-	
-	Point p1(354, 123, 'a');
-	Point p2(123, 345, 'b');
-	Point p3(675, 245, 'c');
-	Point p4(451, 178, 'd');
-	Point p5(1567, 1003, 'e');
+	int dane[5] = { 5,7,123,6456,123 };
+	Osoba o1, o2, o3, o4, o5;
 
+	Sejf s1(12.57);
 
-	cout << "Przed zmiana rozmiar 1920 x 1080" << endl;
-	cout << p1 << p2 << p3 << p4 << p5;
+	s1.dodajOsobe(&o1, 0);
+	s1.dodajOsobe(&o2, 1);
 
-	Point::setRozmiarEkranu(1200, 800);
+	s1.ZapiszDane(&o1, 12.57, dane,5);
 
-	cout << "po zmianie rozmiaru na 1200 x 800" << endl;
-	cout << p1 << p2 << p3 << p4 << p5;
+	cout << "Odczyt danych przez osobe upowazniana: " << endl;
+	int dane2[5];
+	int* wsk = s1.OdczytajDane(&o2, 12.57);
+	for (int i = 0; i < 5; i++)
+	{
+		cout << wsk[i] << endl;
+	}
 
-
+	cout << "Odczyt danych przez osobe nieupowazniana: " << endl;
+	int* wsk2 = s1.OdczytajDane(&o5, 12.57);
 }
-
 #endif
 
 #ifdef ZadanieP

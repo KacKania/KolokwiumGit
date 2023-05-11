@@ -1,0 +1,6 @@
+void dodaj funckja do liczenia osob
+void ustaw funckja do nadpisywania osoby
+bool sprawdzdostep funckprzechodzi po tablicy
+konstruktor zamekCyfrowy() n=0;
+jesli adres osoby jest rowny adresowi os to prawda
+
