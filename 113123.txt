@@ -1,3 +1,4 @@
+dla kodu w c++:
 enum class TypTowaru { ciekly, sypki, paczkowany };
 class SamochodCiezarowy
 {
@@ -40,3 +41,9 @@ public:
 			samochody[i] = nullptr;
 		}
 	}
+	dodaj w c++ Dla kasy Flota dwie metody:
+1) zwracającą liczbę aktualnie przypisanych pojazdów.
+2) zwracająca liczbę wolnych wskaźników (ile pojazdów da się jeszcze przypisać).
+Nie zliczaj liczb wolnych/zajętych wskaźników tylko posłuż się licznikiem i rozmiarem tablicy do ich wyliczenia.
+
+	
