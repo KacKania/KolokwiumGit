@@ -1,7 +1,8 @@
 ﻿#include <iostream>
-using namespace std;
 
-#define ZadanieD
+
+#pragma warning(disable:4996)
+
 
 enum class Studia { stacjonarne, niestacjonarne };
 enum class Stopien { inzynierski, magisterski, doktorancki };
@@ -49,6 +50,9 @@ public:
 	const char* getImie() const { return m_imie; }
 	const char* getNazwisko() const { return m_nazwisko; }
 	int getWiek() const { return m_wiek; }
+	virtual double getKoszt() {
+		return 100;
+	}
 };
 
 
@@ -75,6 +79,10 @@ public:
 	int getSemestr() const { return m_semestr; }
 	Studia getRodzajStudiow() const { return m_rodzajStudiow; }
 	Stopien getStopien() const { return m_stopien; }
+
+	double getKoszt() {
+		return 100;
+	}
 };
 
 class Pracownik : public Osoba
@@ -99,24 +107,28 @@ public:
 	Katedra* getKatedra() const { return m_katedra; }
 	StopienNaukowy getStopienNaukowy() const { return m_stopien; }
 
-	//##############
 	virtual double getPensja() {
 		double pensja = 100 * m_stazPracy;
+
 		if (m_stopien == StopienNaukowy::mgr) {
 			pensja += 2000;
 		}
-		if (m_stopien == StopienNaukowy::dr) {
+		else if (m_stopien == StopienNaukowy::dr) {
 			pensja += 3000;
 		}
-		if (m_stopien == StopienNaukowy::dr_hab) {
+		else if (m_stopien == StopienNaukowy::dr_hab) {
 			pensja += 4000;
 		}
-		if (m_stopien == StopienNaukowy::prof) {
+		else if (m_stopien == StopienNaukowy::prof) {
 			pensja += 5000;
 		}
+
 		return pensja;
 	}
-	//##############
+
+	double getKoszt() {
+		return getPensja();
+	}
 };
 
 class PracownikNaukowy : public Pracownik
@@ -130,13 +142,10 @@ public:
 	void zwiekszLiczbePublikacji() { m_liczbaPublikacji++; }
 	int getLiczbaPublikacji() const { return m_liczbaPublikacji; }
 
-	//##############
-	   double getPensja() {
-	double pensja = Pracownik::getPensja();
-	return pensja + 50* m_liczbaPublikacji;
-}
-	//##############
-
+	double getPensja() {
+		double pensja = Pracownik::getPensja();
+		return pensja + 50 * m_liczbaPublikacji;
+	}
 };
 
 class PracownikDydaktyczny : public Pracownik
@@ -152,109 +161,123 @@ public:
 	void setLiczbaPrzedmiotow(int lp) { m_liczbaPrzedmiotow = (lp > 0) ? lp : 0; }
 	int getLiczbePrzedmiotow() const { return m_liczbaPrzedmiotow; }
 
-	//##############
 	double getPensja() {
 		double pensja = Pracownik::getPensja();
 		return pensja + 100 * m_liczbaPrzedmiotow;
 	}
-	//##############
 };
 
-//##############
 class Doktorant : public Pracownik, public Student
 {
 public:
-	Doktorant(Osoba&o, Kierunek*kierunek, int semestr, Studia rodzaj, Katedra*katedra)
-		:Student(o, kierunek, semestr, rodzaj, Stopien::doktorancki),
-		Pracownik(o, katedra, StopienNaukowy::mgr) {
+	Doktorant(Osoba& o, Kierunek* kierunek, int semestr, Studia rodzaj, Katedra* katedra)
+		: Student(o,kierunek, semestr, rodzaj,Stopien::doktorancki),
+		Pracownik(o,katedra,StopienNaukowy::mgr){
 	}
 
 	double getPensja() {
-		return 1500 + 200 * (m_semestr / 2 - 1);
+		return 1500 + 200 * (m_semestr/2-1);
+	}
+
+	double getKoszt() {
+		return getPensja();
 	}
 };
-//##############
+
+
 
 int main()
 {
-	Katedra k1("Informatyka");
-	Katedra k2("Matematyka");
+	Katedra k1("Matematyka");
+	Katedra k2("Fizyka");
 
-	Kierunek ki1("Informatyka");
-	Kierunek ki2("Matematyka");
+	Kierunek kierunek1("Matematyka stosowana");
+	Kierunek kierunek2("Fizyka teoretyczna");
 
 	Osoba o1("Jan", "Kowalski", 45);
 	Pracownik p1(o1, &k1, StopienNaukowy::mgr);
-	PracownikDydaktyczny pd1(p1, 4);
+	p1.zwiekszStaz();
+	p1.zwiekszStaz();
+	PracownikDydaktyczny pd1(p1,4);	
 
-	Osoba o2("Janina", "Kowalska", 35);
+	Osoba o2("Anna", "Nowak", 37);
 	Pracownik p2(o2, &k1, StopienNaukowy::prof);
+	p2.zwiekszStaz();
+	p2.zwiekszStaz();
+	p2.zwiekszStaz();
+	p2.zwiekszStaz();
+	p2.zwiekszStaz();
+	p2.zwiekszStaz();
+	p2.zwiekszStaz();
 	PracownikNaukowy pn2(p2);
-
+	pn2.zwiekszLiczbePublikacji();
+	pn2.zwiekszLiczbePublikacji();
+	pn2.zwiekszLiczbePublikacji();
+	pn2.zwiekszLiczbePublikacji();
+	pn2.zwiekszLiczbePublikacji();
+	
 	Osoba o3("Janusz", "Iksinski", 29);
-	Doktorant d1(o3, &ki1, 4, Studia::stacjonarne, &k1);
+	Doktorant d1(o3, &kierunek1, 4, Studia::stacjonarne, &k1);
 
-	Osoba o4("Michal", "Kos", 40);
+	Osoba o4("Michał", "Michałowski", 37);
 	Pracownik p4(o4, &k1, StopienNaukowy::dr_hab);
+	p4.zwiekszStaz();
+	p4.zwiekszStaz();
+	p4.zwiekszStaz();
 	PracownikDydaktyczny pd4(p4, 2);
 
-	Osoba o5("Jerzy", "Kiler", 51);
+	Osoba o5("Andrzej", "Andrzejewski", 51);
 	Pracownik p5(o5, &k2, StopienNaukowy::dr);
+	p5.zwiekszStaz();
+	p5.zwiekszStaz();
+	p5.zwiekszStaz();
 	PracownikDydaktyczny pd5(p5, 2);
 
 	Osoba o6("Monika", "Michałowska", 32);
 	Pracownik p6(o6, &k2, StopienNaukowy::dr);
+	p6.zwiekszStaz();
+	p6.zwiekszStaz();
 	PracownikNaukowy pn6(p6);
+	pn6.zwiekszLiczbePublikacji();
+
 
 	Osoba o7("Antoni", "Jędrzejewski", 40);
 	Pracownik p7(o7, &k1, StopienNaukowy::dr);
+	p7.zwiekszStaz();
+	p7.zwiekszStaz();
+	p7.zwiekszStaz();
+	p7.zwiekszStaz();
+	p7.zwiekszStaz();
 	PracownikNaukowy pn7(p7);
+	pn7.zwiekszLiczbePublikacji();
+	pn7.zwiekszLiczbePublikacji();
+	pn7.zwiekszLiczbePublikacji();
 
 	Osoba o8("Adam", "Kowalewski", 20);
-	Student s8(o8, &ki1, 1, Studia::stacjonarne, Stopien::inzynierski);
+	Student s8(o8, &kierunek1, 1, Studia::stacjonarne, Stopien::inzynierski);
 
 	Osoba o9("Wiktoria", "Bąk", 23);
-	Student s9(o9, &ki1, 5, Studia::niestacjonarne, Stopien::inzynierski);
+	Student s9(o9, &kierunek1, 5, Studia::niestacjonarne, Stopien::inzynierski);
 
 	Osoba o10("Robert", "Warszawski", 24);
-	Student s10(o10, &ki2, 1, Studia::stacjonarne, Stopien::magisterski);
+	Student s10(o10, &kierunek2, 1, Studia::stacjonarne, Stopien::magisterski);
 
 	Osoba o11("Wiesław", "Balon", 21);
-	Student s11(o11, &ki2, 2, Studia::niestacjonarne, Stopien::inzynierski);
+	Student s11(o11, &kierunek2, 2, Studia::niestacjonarne, Stopien::inzynierski);
 
+	std::cout << "pensja p1: " << pd1.getPensja() << std::endl;
+	std::cout << "pensja p2: " << pn2.getPensja() << std::endl;
+	std::cout << "pensja d1: " << d1.getPensja() << std::endl;
 
+	Osoba osoby[3] = { pd1, pn2, s8 };
 
+	double suma = 0;
 
+	for (Osoba os : osoby) {
+		std::cout << os.getKoszt() << std::endl;	
+	}
 
-
-
+	return 0;
 }
- 
-
-#ifdef ZadanieD
-
-
-
-#endif
-
-#ifdef ZadanieW
-
-
-
-#endif
-
-#ifdef ZadanieP
-
-
-
-#endif
-
-#ifdef ZadanieA
-
-
-
-#endif
-
-
 
 
