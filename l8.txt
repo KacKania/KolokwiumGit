@@ -1,0 +1,22 @@
+klasa doktorant dziedziczy po public student i pracownik.
+w publicu konstruktor zeby wypelnic doktoranta
+void zwieksz rok funckja do zwiekszania roku
+rozbudowa doktoranckich
+wypelnianie danych ze student
+wielodziedziczenie po przecinku
+getpensja uzywana z poprzedniego przykladu
+W wyrażeniu "Katedra k1("Informatyka");" w języku C++ tworzona jest instancja obiektu klasy "Katedra" o nazwie "k1" z argumentem "Informatyka".
+
+Przyjmując, że klasa "Katedra" została już zdefiniowana w kodzie, tworzenie obiektu "k1" odbywa się poprzez wywołanie konstruktora klasy "Katedra" z argumentem "Informatyka". Konstruktor jest specjalną metodą w klasie, która jest wywoływana podczas tworzenia nowego obiektu i służy do inicjalizacji jego stanu.
+
+Na podstawie dostarczonego argumentu "Informatyka", konstruktor klasy "Katedra" może wykonać określone operacje, takie jak przypisanie wartości do pól obiektu lub wykonanie innych działań potrzebnych do poprawnej inicjalizacji obiektu.
+
+W skrócie, linia kodu "Katedra k1("Informatyka");" tworzy nowy obiekt klasy "Katedra" o nazwie "k1" i inicjalizuje go wartością "Informatyka".
+
+W wyrażeniu "Osoba o1("Jan", "Kowalski", 45);" tworzony jest obiekt klasy "Osoba" o nazwie "o1" z trzema argumentami: "Jan" (imię), "Kowalski" (nazwisko) i 45 (wiek).
+
+Następnie w wyrażeniu "Pracownik p1(o1, &k1, StopienNaukowy::mgr);" tworzony jest obiekt klasy "Pracownik" o nazwie "p1" z trzema argumentami. Pierwszym argumentem jest obiekt "o1", który jest wcześniej zdefiniowanym obiektem klasy "Osoba". Drugim argumentem jest wskaźnik do obiektu "k1", którego typu nie jest podany, ale można przypuszczać, że jest to jakaś klasa lub struktura związana z katedrą. Trzecim argumentem jest wartość typu wyliczeniowego "StopienNaukowy::mgr", która może reprezentować stopień naukowy pracownika (np. magister).
+
+Wreszcie, w wyrażeniu "PracownikDydaktyczny pd1(p1, 4);" tworzony jest obiekt klasy "PracownikDydaktyczny" o nazwie "pd1" z dwoma argumentami. Pierwszym argumentem jest obiekt "p1", który jest wcześniej zdefiniowanym obiektem klasy "Pracownik". Drugim argumentem jest liczba 4, która może reprezentować pewne informacje specyficzne dla pracownika dydaktycznego.
+
+Podsumowując, te linie kodu tworzą hierarchię obiektów, gdzie obiekt "PracownikDydaktyczny" jest zbudowany na podstawie obiektu "Pracownik", który z kolei jest zbudowany na podstawie obiektu "Osoba". Każda klasa może mieć swoje własne pola i metody, które są inicjalizowane i wykorzystywane podczas tworzenia i manipulacji obiektami.
