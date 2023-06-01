@@ -20,3 +20,33 @@ Następnie w wyrażeniu "Pracownik p1(o1, &k1, StopienNaukowy::mgr);" tworzony j
 Wreszcie, w wyrażeniu "PracownikDydaktyczny pd1(p1, 4);" tworzony jest obiekt klasy "PracownikDydaktyczny" o nazwie "pd1" z dwoma argumentami. Pierwszym argumentem jest obiekt "p1", który jest wcześniej zdefiniowanym obiektem klasy "Pracownik". Drugim argumentem jest liczba 4, która może reprezentować pewne informacje specyficzne dla pracownika dydaktycznego.
 
 Podsumowując, te linie kodu tworzą hierarchię obiektów, gdzie obiekt "PracownikDydaktyczny" jest zbudowany na podstawie obiektu "Pracownik", który z kolei jest zbudowany na podstawie obiektu "Osoba". Każda klasa może mieć swoje własne pola i metody, które są inicjalizowane i wykorzystywane podczas tworzenia i manipulacji obiektami.
+
+Ten kod jest definicją klasy "Doktorant" w języku C++. Klasa "Doktorant" dziedziczy publicznie (za pomocą słowa kluczowego "public") zarówno po klasie "Pracownik", jak i "Student".
+
+Konstruktor klasy "Doktorant" przyjmuje referencję do obiektu klasy "Osoba" (oznaczoną jako "o"), wskaźnik do obiektu klasy "Kierunek" (oznaczony jako "kierunek"), wartość typu int oznaczającą semestr (oznaczoną jako "semestr"), wartość typu "Studia" oznaczającą rodzaj studiów (oznaczoną jako "rodzaj") oraz wskaźnik do obiektu klasy "Katedra" (oznaczony jako "katedra").
+
+W konstruktorze inicjalizowane są klasy bazowe "Student" i "Pracownik" za pomocą listy inicjalizacyjnej. Klasa bazowa "Student" jest inicjalizowana przy użyciu przekazanych argumentów oraz wartości "Stopien::doktorancki". Klasa bazowa "Pracownik" jest inicjalizowana przy użyciu przekazanego obiektu "Osoba", wskaźnika "katedra" oraz wartości "StopienNaukowy::mgr".
+
+Funkcja "getPensja" w klasie "Doktorant" zwraca wartość typu double. Zwracana pensja jest obliczana na podstawie prostego wzoru: 1500 + 200 * (m_semestr / 2 - 1). Semestr jest dzielony przez 2, a następnie od wyniku odejmowane jest 1. Otrzymany wynik jest mnożony przez 200 i dodawany do stałej wartości 1500.
+
+Klasa "Doktorant" łączy funkcjonalność zarówno klasy "Pracownik", jak i "Student", umożliwiając reprezentację doktoranta, który jest jednocześnie studentem i pracownikiem.
+
+Ten kod również jest fragmentem funkcji w języku C++. Funkcja ta nazywa się "getPensja" i zwraca wartość typu double.
+
+W tej funkcji wykonuje się kilka operacji w celu obliczenia pensji pracownika. Na początku tworzona jest zmienna "pensja", która jest inicjalizowana wartością zwróconą przez funkcję "getPensja" z klasy bazowej "Pracownik".
+
+Następnie, do obliczonej pensji dodawany jest wynik mnożenia wartości zmiennej "m_liczbaPublikacji" przez 50.
+
+Ostatecznie, obliczona pensja z uwzględnieniem liczby publikacji jest zwracana przez funkcję.
+
+Ten kod prawdopodobnie znajduje się w klasie pochodnej, która dziedziczy po klasie bazowej "Pracownik". Dzięki wywołaniu "Pracownik::getPensja()" możliwe jest uzyskanie pensji zdefiniowanej w klasie bazowej, a następnie dodanie do niej dodatkowej premii na podstawie liczby publikacji w klasie pochodnej.
+
+en kod jest fragmentem funkcji w języku C++. Funkcja ta nazywa się "getPensja" i jest zadeklarowana jako wirtualna (virtual). Zwraca wartość typu double.
+
+W tej funkcji obliczana jest pensja pracownika na podstawie kilku czynników. Pierwszy czynnik to "m_stazPracy", czyli staż pracy, który jest mnożony przez 100. Następnie sprawdzane są różne wartości "m_stopien", które reprezentują stopień naukowy pracownika.
+
+Jeśli stopień naukowy wynosi "mgr" (magister), do pensji dodawane są 2000. Jeśli stopień naukowy wynosi "dr" (doktor), do pensji dodawane są 3000. Jeśli stopień naukowy wynosi "dr_hab" (doktor habilitowany), do pensji dodawane są 4000. Jeśli stopień naukowy wynosi "prof" (profesor), do pensji dodawane są 5000.
+
+Na koniec, obliczona pensja jest zwracana przez funkcję.
+
+Jest to przykład implementacji polimorfizmu w C++. Dzięki zastosowaniu słowa kluczowego "virtual" w deklaracji funkcji, możliwe jest nadpisanie tej funkcji w klasach pochodnych.
