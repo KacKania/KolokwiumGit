@@ -1,0 +1,8 @@
+private:char* nazwa;char* getNazwa(){return nazwa;}
+void setNazwa(char* n){nazwa = n;}
+switch (material){case Material::Drewno:
+m = "drewno";break;
+Zabawka() {char n[] = "Samochod";
+Zabawka(char* n,) nazwa = n;
+void wyswietl() {cout << nazwa << " "~Zabawka() {
+Zabawka z1;z1.wyswietl();
