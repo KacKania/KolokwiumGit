@@ -1,0 +1,137 @@
+Zad2 T1
+
+char* wczytajPlik(const char* plikdootwarcia) {
+	char* tablica = nullptr;
+	if (plikdootwarcia == nullptr)return tablica;
+	FILE* plik = fopen(plikdootwarcia, "r");
+	char temp;
+	int wielkosc = 0;
+	while (!feof(plik)) {
+		temp = fgetc(plik);
+		wielkosc++;
+	}
+	if (wielkosc == 0) {
+		return tablica;
+	}
+	else {
+		tablica = new char[wielkosc] {};
+		rewind(plik);
+		int licznik = 0;
+		while (!feof(plik)) {
+			tablica[licznik] = fgetc(plik);
+			if ((int)tablica[licznik] == 10)tablica[licznik] = char(32);
+			licznik++;
+		}
+	}
+	fclose(plik);
+	return tablica;
+}
+void wypiszTekst(const char* tekst, int liczba_znakow) {
+	int rozmiar;
+	int j = 0;
+	while (tekst[j] != (int)'.') {
+		rozmiar++;
+		j++;
+	}
+	int licznikznakow = 0;
+	for (int i = 0; i < rozmiar; i++) {
+		if (licznikznakow >= liczba_znakow && (int)tekst[i] == 32) {
+			cout << "\n";
+			licznikznakow = 0;
+		}
+		else {
+			cout << tekst[i];
+			licznikznakow++;
+		}
+	}
+}
+char* usuntablice(char* tablica) {
+	delete[]tablica;
+	tablica = nullptr;
+	return tablica;
+}
+int main()
+{
+	char*tekst= wczytajPlik("C:\\Users\\Student\\Desktop\\damzimkol\\ConsoleApplication1\\kolos.txt");
+	wypiszTekst(tekst, 5);
+	tekst = usuntablice(tekst);
+}
+
+####Z WYJAŚNIENIEM
+char* wczytajPlik(const char* plikdootwarcia) {
+    char* tablica = nullptr; // Inicjalizacja wskaźnika na char jako nullptr (pusty).
+    if (plikdootwarcia == nullptr) return tablica; // Jeśli nazwa pliku jest nullptr, zwraca pustą tablicę.
+    FILE* plik = fopen(plikdootwarcia, "r"); // Otwarcie pliku do odczytu.
+    char temp; // Zmienna do przechowywania tymczasowych znaków.
+    int wielkosc = 0; // Licznik wielkości pliku (ilości znaków).
+
+    // Pętla while odczytująca znaki z pliku, zwiększając licznik wielkości.
+    while (!feof(plik)) {
+        temp = fgetc(plik);
+        wielkosc++;
+    }
+
+    // Sprawdzenie, czy plik jest pusty (0 znaków).
+    if (wielkosc == 0) {
+        return tablica; // Zwraca pustą tablicę.
+    } else {
+        tablica = new char[wielkosc] {}; // Tworzy dynamiczną tablicę char o rozmiarze wielkosc.
+        rewind(plik); // Przesuwa wskaźnik pliku na początek.
+        int licznik = 0; // Licznik pozycji w tablicy.
+
+        // Pętla while odczytująca znaki z pliku i umieszczająca je w tablicy.
+        while (!feof(plik)) {
+            tablica[licznik] = fgetc(plik);
+            if ((int)tablica[licznik] == 10) tablica[licznik] = char(32); // Zamienia znak nowej linii na spację.
+            licznik++;
+        }
+    }
+    fclose(plik); // Zamyka plik.
+    return tablica; // Zwraca wskaźnik do dynamicznie alokowanej tablicy.
+}
+
+void wypiszTekst(const char* tekst, int liczba_znakow) {
+    int rozmiar;
+    int j = 0;
+
+    // Oblicza rozmiar tekstu do znaku kropki '.'
+    while (tekst[j] != (int)'.') {
+        rozmiar++;
+        j++;
+    }
+    int licznikznakow = 0;
+
+    // Pętla for wypisująca tekst ze zwracaniem nowej linii po osiągnięciu liczba_znakow.
+    for (int i = 0; i < rozmiar; i++) {
+        if (licznikznakow >= liczba_znakow && (int)tekst[i] == 32) {
+            cout << "\n";
+            licznikznakow = 0;
+        } else {
+            cout << tekst[i];
+            licznikznakow++;
+        }
+    }
+}
+
+char* usuntablice(char* tablica) {
+    delete[] tablica; // Usuwa dynamicznie alokowaną tablicę.
+    tablica = nullptr; // Ustawia wskaźnik na nullptr (pusty).
+    return tablica; // Zwraca pusty wskaźnik.
+}
+
+int main() {
+    char* tekst = wczytajPlik("C:\\Users\\Student\\Desktop\\damzimkol\\ConsoleApplication1\\kolos.txt"); // Wczytuje tekst z pliku.
+    wypiszTekst(tekst, 5); // Wypisuje tekst z ograniczeniem do 5 znaków na linię.
+    tekst = usuntablice(tekst); // Zwalnia pamięć zarezerwowaną dla tekstu.
+}
+Ten kod wykonuje kilka operacji:
+
+Funkcja wczytajPlik odczytuje zawartość pliku o nazwie podanej w plikdootwarcia. Tworzy dynamiczną tablicę znaków (char) o rozmiarze odpowiadającym ilości znaków w pliku, a następnie kopiuje zawartość pliku do tej tablicy. Przy tym znak nowej linii (kod ASCII 10) jest zamieniany na spację. Funkcja zwraca wskaźnik do tej tablicy.
+
+Funkcja wypiszTekst wypisuje zawartość tekstu, który jest przekazywany jako argument, ograniczając liczbę znaków na linię do wartości liczba_znakow.
+
+Funkcja usuntablice usuwa dynamicznie zaalokowaną tablicę znaków poprzez delete[] i ustawia wskaźnik na nullptr.
+
+W funkcji main, plik jest wczytywany przy użyciu wczytajPlik, następnie jest wypisywany ograniczając ilość znaków na linię do 5, a potem pamięć alokowana dla tekstu jest zwalniana za pomocą usuntablice.
+
+Mimo że kod działa, ma kilka błędów i niedociągnięć. Na przykład, w funkcji wypiszTekst nie zainicjalizowano zmiennej rozmiar, co może prowadzić do nieprzewidywalnych wyników. Ponadto, kod nie zwalnia pamięci alokowanej dla tekst przed zakończeniem programu.

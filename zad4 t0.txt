@@ -1,0 +1,94 @@
+#include <iostream>
+
+const int MAX_INSTRUMENTS = 50;
+const int MAX_SOUND_LENGTH = 100;
+
+class Instrument {
+public:
+    virtual void Graj(char* sound) const = 0;
+    virtual ~Instrument() {}
+};
+
+class Skrzypce : public Instrument {
+public:
+    void Graj(char* sound) const override {
+        std::strcpy(sound, "Skrzypce grają: SKRZYP SKRZYP");
+    }
+};
+
+class Gitara : public Instrument {
+public:
+    void Graj(char* sound) const override {
+        std::strcpy(sound, "Gitara gra: BRZĘK BRZĘK");
+    }
+};
+
+class Fortepian : public Instrument {
+public:
+    void Graj(char* sound) const override {
+        std::strcpy(sound, "Fortepian gra: DING DING DING");
+    }
+};
+
+class Trabka : public Instrument {
+public:
+    void Graj(char* sound) const override {
+        std::strcpy(sound, "Trąbka gra: TARA TARA");
+    }
+};
+
+class Orkiestra {
+private:
+    Instrument* instrumenty[MAX_INSTRUMENTS];
+    int iloscInstrumentow;
+
+public:
+    Orkiestra() : iloscInstrumentow(0) {}
+
+    void DodajInstrument(Instrument* instrument) {
+        if (iloscInstrumentow < MAX_INSTRUMENTS) {
+            instrumenty[iloscInstrumentow++] = instrument;
+        } else {
+            std::cout << "Orkiestra jest pełna, nie można dodać więcej instrumentów." << std::endl;
+        }
+    }
+
+    void UsunInstrument(Instrument* instrument) {
+        for (int i = 0; i < iloscInstrumentow; ++i) {
+            if (instrumenty[i] == instrument) {
+                delete instrumenty[i];
+                instrumenty[i] = nullptr;
+                iloscInstrumentow--;
+                break;
+            }
+        }
+    }
+
+    void StroimySie() const {
+        std::cout << "Stroimy się..." << std::endl;
+        char sound[MAX_SOUND_LENGTH];
+        for (int i = 0; i < iloscInstrumentow; ++i) {
+            instrumenty[i]->Graj(sound);
+            std::cout << sound << std::endl;
+        }
+    }
+
+    ~Orkiestra() {
+        for (int i = 0; i < iloscInstrumentow; ++i) {
+            delete instrumenty[i];
+        }
+    }
+};
+
+int main() {
+    Orkiestra orkiestra;
+
+    orkiestra.DodajInstrument(new Skrzypce());
+    orkiestra.DodajInstrument(new Gitara());
+    orkiestra.DodajInstrument(new Fortepian());
+    orkiestra.DodajInstrument(new Trabka());
+
+    orkiestra.StroimySie();
+
+    return 0;
+}

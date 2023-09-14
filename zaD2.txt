@@ -1,0 +1,56 @@
+char* wczytajPlik(const char* plikdootwarcia) {
+	char* tablica = nullptr;
+	if (plikdootwarcia == nullptr)return tablica;
+	FILE* plik = fopen(plikdootwarcia, "r");
+	char temp;
+	int wielkosc = 0;
+	while (!feof(plik)) {
+		temp = fgetc(plik);
+		wielkosc++;
+	}
+	if (wielkosc == 0) {
+		return tablica;
+	}
+	else {
+		tablica = new char[wielkosc] {};
+		rewind(plik);
+		int licznik = 0;
+		while (!feof(plik)) {
+			tablica[licznik] = fgetc(plik);
+			if ((int)tablica[licznik] == 10)tablica[licznik] = char(32);
+			licznik++;
+		}
+	}
+	fclose(plik);
+	return tablica;
+}
+void wypiszTekst(const char* tekst, int liczba_znakow) {
+	int rozmiar;
+	int j = 0;
+	while (tekst[j] != (int)'.') {
+		rozmiar++;
+		j++;
+	}
+	int licznikznakow = 0;
+	for (int i = 0; i < rozmiar; i++) {
+		if (licznikznakow >= liczba_znakow && (int)tekst[i] == 32) {
+			cout << "\n";
+			licznikznakow = 0;
+		}
+		else {
+			cout << tekst[i];
+			licznikznakow++;
+		}
+	}
+}
+char* usuntablice(char* tablica) {
+	delete[]tablica;
+	tablica = nullptr;
+	return tablica;
+}
+int main()
+{
+	char*tekst= wczytajPlik("C:\\Users\\Student\\Desktop\\kackan\\ConsoleApplication1\\plik.txt");
+	wypiszTekst(tekst, 5);
+	tekst = usuntablice(tekst);
+}

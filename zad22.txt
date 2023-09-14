@@ -1,0 +1,50 @@
+#include <iostream>
+#include <fstream>
+
+
+float* alokujTablice(int rozmiar) {
+    float* tablica = new float[rozmiar + 1];
+    tablica[0] = static_cast<float>(rozmiar); 
+    return &tablica[1]; 
+}
+
+
+void zapiszDoPliku(const float* tablica, int rozmiar, const std::string& nazwaPliku) {
+    std::ofstream plik(nazwaPliku, std::ios::binary);
+    if (!plik.is_open()) {
+        std::cerr << "Nie można otworzyć pliku do zapisu!" << std::endl;
+        return;
+    }
+
+    
+    plik.write(reinterpret_cast<const char*>(&rozmiar), sizeof(int));
+
+   
+    plik.write(reinterpret_cast<const char*>(tablica), rozmiar * sizeof(float));
+
+    plik.close();
+}
+
+
+void zwolnijPamiec(float* tablica) {
+    tablica--;
+    delete[] tablica;
+}
+
+int main() {
+    int rozmiar = 5; 
+    float* mojaTablica = alokujTablice(rozmiar);
+
+    
+    for (int i = 0; i < rozmiar; i++) {
+        mojaTablica[i] = i * 2.5;
+    }
+
+    
+    zapiszDoPliku(mojaTablica, rozmiar, "tablica.bin");
+
+   
+    zwolnijPamiec(mojaTablica);
+
+    return 0;
+}

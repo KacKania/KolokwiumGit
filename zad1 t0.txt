@@ -1,0 +1,87 @@
+Plik: camel_case_converter.h
+
+cpp
+Copy code
+#pragma once
+#include <string>
+#include <stdexcept>
+
+namespace CamelCaseConverter {
+    std::string convert(const std::string& input, char separator = '_');
+}
+Plik: camel_case_converter.cpp
+
+cpp
+Copy code
+#include "camel_case_converter.h"
+
+namespace CamelCaseConverter {
+    std::string convert(const std::string& input, char separator) {
+        if (input.empty()) {
+            throw std::invalid_argument("Input text cannot be empty.");
+        }
+
+        std::string result = input;
+        size_t pos = 0;
+        while ((pos = result.find(separator, pos)) != std::string::npos) {
+            result.erase(pos, 1);
+            if (pos < result.length()) {
+                result[pos] = std::toupper(result[pos]);
+            }
+        }
+        return result;
+    }
+}
+Plik: tests.h
+
+cpp
+Copy code
+#pragma once
+#include <cassert>
+#include "camel_case_converter.h"
+
+namespace Tests {
+    void testConversion();
+    void testException();
+}
+Plik: tests.cpp
+
+cpp
+Copy code
+#include "tests.h"
+
+namespace Tests {
+    void testConversion() {
+        assert(CamelCaseConverter::convert("to_jest_zapis") == "toJestZapis");
+        assert(CamelCaseConverter::convert("to-jest-zapis", '-') == "toJestZapis");
+        assert(CamelCaseConverter::convert("jednowyrazowy") == "jednowyrazowy");
+    }
+
+    void testException() {
+        bool exceptionThrown = false;
+        try {
+            CamelCaseConverter::convert("");
+        } catch (const std::invalid_argument& e) {
+            exceptionThrown = true;
+        }
+        assert(exceptionThrown);
+    }
+}
+Plik: main.cpp
+
+cpp
+Copy code
+#include <iostream>
+#include "tests.h"
+
+int main() {
+    try {
+        Tests::testConversion();
+        Tests::testException();
+        std::cout << "All tests passed!" << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Test failed with exception: " << e.what() << std::endl;
+    }
+    return 0;
+}
+Pamiętaj, aby wszystkie te pliki znajdowały się w tym samym katalogu. Możesz je skompilować, aby przetestować działanie funkcji i poprawności testów.

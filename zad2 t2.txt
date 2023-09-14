@@ -1,0 +1,52 @@
+#include <iostream>
+#include <fstream>
+
+// Funkcja do alokacji tablicy dynamicznej typu float
+// z zapisaną liczbą elementów w -1 indeksie
+float* alokujTablice(int rozmiar) {
+    float* tablica = new float[rozmiar + 1];
+    tablica[0] = static_cast<float>(rozmiar); // Zapisz liczbę elementów w -1 indeksie
+    return &tablica[1]; // Zwróć wskaźnik na pierwszy element tablicy
+}
+
+// Funkcja do zapisywania tablicy dynamicznej do pliku tekstowego w trybie binarnym
+void zapiszDoPliku(const float* tablica, int rozmiar, const std::string& nazwaPliku) {
+    std::ofstream plik(nazwaPliku, std::ios::binary);
+    if (!plik.is_open()) {
+        std::cerr << "Nie można otworzyć pliku do zapisu!" << std::endl;
+        return;
+    }
+
+    // Zapisz liczbę elementów
+    plik.write(reinterpret_cast<const char*>(&rozmiar), sizeof(int));
+
+    // Zapisz tablicę do pliku
+    plik.write(reinterpret_cast<const char*>(tablica), rozmiar * sizeof(float));
+
+    plik.close();
+}
+
+// Funkcja do zwalniania pamięci po alokacji
+void zwolnijPamiec(float* tablica) {
+    // Przywróć wskaźnik o jeden indeks do tyłu, aby uzyskać dostęp do alokowanej pamięci
+    tablica--;
+    delete[] tablica;
+}
+
+int main() {
+    int rozmiar = 5; // Przykładowy rozmiar tablicy
+    float* mojaTablica = alokujTablice(rozmiar);
+
+    // Wypełnij tablicę przykładowymi danymi
+    for (int i = 0; i < rozmiar; i++) {
+        mojaTablica[i] = i * 2.5;
+    }
+
+    // Wywołaj funkcję do zapisu do pliku
+    zapiszDoPliku(mojaTablica, rozmiar, "tablica.bin");
+
+    // Wywołaj funkcję do zwalniania pamięci
+    zwolnijPamiec(mojaTablica);
+
+    return 0;
+}
